@@ -142,7 +142,7 @@
     </div>
 
     <h3 class="sec">晒图墙</h3>
-    <p class="sub">兑成功了晒个图沾沾喜气。不当图片会被举报，攒够 3 次自动隐藏。</p>
+    <p class="sub">兑成功了晒个图沾沾喜气。不当图片会被举报，3 台不同设备举报后自动隐藏（同一设备只能举报一次）。</p>
     <div class="panel" style="margin-bottom:12px">
       <div class="filebox" id="galFileBox">
         <span>点这里选图片（2MB 以内）</span>
@@ -166,7 +166,7 @@
   <!-- ===== 聊天 ===== -->
   <section class="view" id="view-chat">
     <h3 class="sec">聊天区</h3>
-    <p class="sub">反馈哪个码失效了、许愿求码、打招呼都行。不当发言被举报 3 次自动隐藏。</p>
+    <p class="sub">反馈哪个码失效了、许愿求码、打招呼都行。不当发言被 3 台不同设备举报后自动隐藏（同一设备只能举报一次）。</p>
     <label for="chatNick" style="margin-top:4px">我的昵称</label>
     <input id="chatNick" class="nickInput" placeholder="匿名" style="max-width:220px">
     <div id="chatList"></div>
@@ -207,7 +207,7 @@
 
     <h3 class="sec">关于本站</h3>
     <div class="panel" style="font-size:14px;line-height:1.9">
-      非官方公益互助站，仿照抖音上「远坂小姐拜托了」的 Muse 邀请码互助站做的。码池靠大家自发维护：能用的点复制，用不了的点反馈，攒够 3 次自动下架。
+      非官方公益互助站，仿照抖音上「远坂小姐拜托了」的 Muse 邀请码互助站做的。码池靠大家自发维护：能用的点复制，用不了的点反馈，3 台不同设备都反馈才下架。
     </div>
   </section>
 </main>
@@ -232,6 +232,15 @@
 const $ = id => document.getElementById(id);
 let state = { codes: [], collected: [], availableCount: 0, gallery: [], comments: [], stats: {} };
 let filter = 'all';
+/* 设备标识 + 本机已反馈记录（防刷：一台设备对一条内容只能反馈一次） */
+function myDid(){
+  let d = localStorage.getItem('muse_did');
+  if(!d){ d = Date.now().toString(36) + Math.random().toString(36).slice(2,12); localStorage.setItem('muse_did', d); }
+  return d;
+}
+function reportedSet(){ try{ return JSON.parse(localStorage.getItem('muse_reported')||'{}'); }catch(e){ return {}; } }
+function hasReported(kind, id){ const s = reportedSet(); return Array.isArray(s[kind]) && s[kind].includes(id); }
+function markReported(kind, id){ const s = reportedSet(); s[kind] = s[kind]||[]; if(!s[kind].includes(id)) s[kind].push(id); localStorage.setItem('muse_reported', JSON.stringify(s)); }
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
 function esc(s){ return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function rel(iso){ const s=(Date.now()-new Date(iso))/1000; if(s<60) return '刚刚'; if(s<3600) return Math.floor(s/60)+' 分钟前'; if(s<86400) return Math.floor(s/3600)+' 小时前'; return Math.floor(s/86400)+' 天前'; }
@@ -250,7 +259,7 @@ function cardHTML(c){
       <span class="grow"></span>
       <span class="slots">${c.remaining}/${c.totalSlots} 剩余</span>
       <button class="primary" data-act="copy" ${grey?'disabled':''}>复制</button>
-      <button data-act="report" ${grey?'disabled':''}>用不了</button>
+      ${hasReported('code', c.id) ? '<button disabled>已反馈</button>' : `<button data-act="report" ${grey?'disabled':''}>用不了</button>`}
     </div>
     <div class="prog"><i style="width:${pct}%"></i></div>
     <div class="row" style="margin-top:8px"><span class="note">${c.sourceNote?esc(c.sourceNote)+' · ':''}${rel(c.createdAt)}分享</span></div>
@@ -281,7 +290,7 @@ function render(){
       <img src="${esc(g.url)}" alt="用户晒图" loading="lazy">
       <div class="gb">
         <div class="gcap">${esc(g.caption)}</div>
-        <div class="row" style="margin-top:6px"><span class="note">${esc(g.name)} · ${rel(g.createdAt)}</span><span class="grow"></span><button class="mini" data-act="greport">举报</button></div>
+        <div class="row" style="margin-top:6px"><span class="note">${esc(g.name)} · ${rel(g.createdAt)}</span><span class="grow"></span>${hasReported('gallery', g.id) ? '<span class="note">已举报</span>' : '<button class="mini" data-act="greport">举报</button>'}</div>
       </div>
     </div>`).join('') : '<div class="empty">还没有人晒图，来做第一个。</div>';
   const chats = [...state.comments].reverse();
@@ -289,7 +298,7 @@ function render(){
     <div class="bubble" data-kind="comment" data-id="${c.id}">
       <span class="avatar">${esc((c.name||'匿').slice(0,1))}</span>
       <div class="bb">
-        <div class="who">${esc(c.name)} · ${rel(c.createdAt)} <button class="mini" data-act="creport">举报</button></div>
+        <div class="who">${esc(c.name)} · ${rel(c.createdAt)} ${hasReported('comment', c.id) ? '<span class="note">已举报</span>' : '<button class="mini" data-act="creport">举报</button>'}</div>
         <div class="txt">${esc(c.text)}</div>
       </div>
     </div>`).join('') : '<div class="empty">还没有人说话，来打个招呼。</div>';
@@ -331,17 +340,23 @@ document.addEventListener('click', async e=>{
       toast(ok ? '已复制 '+c.code+'，名额扣 1' : '复制失败，码是 '+c.code+' 请手动输入');
       const r = await fetch(`/api/codes/${id}/copy`, {method:'POST'}); state = await r.json(); render();
     } else {
-      if(!confirm('确认反馈 '+c.code+' 用不了？攒够 3 次它会进「已失效」区。')) return;
-      const r = await fetch(`/api/codes/${id}/report`, {method:'POST'}); state = await r.json(); render();
+      if(!confirm('确认反馈 '+c.code+' 用不了？需要 3 台不同设备都反馈，它才会进「已失效」区。')) return;
+      const r = await fetch(`/api/codes/${id}/report`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({did: myDid()})});
+      if(r.status===409){ markReported('code', id); render(); toast('你已经反馈过这个码了'); return; }
+      state = await r.json(); markReported('code', id); render();
       toast('已记录反馈，谢谢');
     }
   } else if(kind==='gallery' && btn.dataset.act==='greport'){
-    if(!confirm('举报这张图？攒够 3 次会自动隐藏。')) return;
-    const r = await fetch(`/api/gallery/${id}/report`, {method:'POST'}); state = await r.json(); render();
+    if(!confirm('举报这张图？需要 3 台不同设备举报才会隐藏。')) return;
+    const r = await fetch(`/api/gallery/${id}/report`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({did: myDid()})});
+    if(r.status===409){ markReported('gallery', id); render(); toast('你已经举报过了'); return; }
+    state = await r.json(); markReported('gallery', id); render();
     toast('已举报');
   } else if(kind==='comment' && btn.dataset.act==='creport'){
-    if(!confirm('举报这条发言？攒够 3 次会自动隐藏。')) return;
-    const r = await fetch(`/api/comments/${id}/report`, {method:'POST'}); state = await r.json(); render();
+    if(!confirm('举报这条发言？需要 3 台不同设备举报才会隐藏。')) return;
+    const r = await fetch(`/api/comments/${id}/report`, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({did: myDid()})});
+    if(r.status===409){ markReported('comment', id); render(); toast('你已经举报过了'); return; }
+    state = await r.json(); markReported('comment', id); render();
     toast('已举报');
   }
 });

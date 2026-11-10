@@ -29,6 +29,9 @@ function load() {
   }
   db.gallery = db.gallery || [];
   db.comments = db.comments || [];
+  for (const c of db.codes) c.reporters = c.reporters || [];
+  for (const g of db.gallery) g.reporters = g.reporters || [];
+  for (const c of db.comments) c.reporters = c.reporters || [];
   save();
 }
 function mk(code, totalSlots, pinned, sourceNote, now, collected = false) {
@@ -46,6 +49,16 @@ function pub(c) {
     status: c.status, usedCount: c.usedCount, createdAt: c.createdAt,
     image: c.image || null,
   };
+}
+// 防刷：同一台设备（did）对同一条目只能反馈一次。返回 true 表示这次计数生效。
+function countReport(item, did) {
+  item.reporters = item.reporters || [];
+  if (did) {
+    if (item.reporters.includes(did)) return false;
+    item.reporters.push(did);
+  }
+  item.reports++;
+  return true;
 }
 function refreshStatus(c) {
   if (c.status === 'deleted') return;
@@ -145,7 +158,9 @@ const server = http.createServer(async (req, res) => {
     if (mRep && req.method === 'POST') {
       const c = db.codes.find(x => x.id === +mRep[1]);
       if (!c || c.status === 'deleted') return json(res, 404, { error: 'not found' });
-      c.reports++; refreshStatus(c); save();
+      const body = await readBody(req).catch(() => ({}));
+      if (!countReport(c, clean(body.did, 64))) return json(res, 409, { error: '你已经反馈过这个码了' });
+      refreshStatus(c); save();
       return json(res, 200, state());
     }
     // 晒图墙
@@ -167,7 +182,9 @@ const server = http.createServer(async (req, res) => {
     if (mGal && req.method === 'POST') {
       const g = db.gallery.find(x => x.id === +mGal[1]);
       if (!g) return json(res, 404, { error: 'not found' });
-      g.reports++; if (g.reports >= 3) g.hidden = true; save();
+      const body = await readBody(req).catch(() => ({}));
+      if (!countReport(g, clean(body.did, 64))) return json(res, 409, { error: '你已经举报过这张图了' });
+      if (g.reports >= 3) g.hidden = true; save();
       return json(res, 200, state());
     }
     // 评论区
@@ -186,7 +203,9 @@ const server = http.createServer(async (req, res) => {
     if (mCom && req.method === 'POST') {
       const c = db.comments.find(x => x.id === +mCom[1]);
       if (!c) return json(res, 404, { error: 'not found' });
-      c.reports++; if (c.reports >= 3) c.hidden = true; save();
+      const body = await readBody(req).catch(() => ({}));
+      if (!countReport(c, clean(body.did, 64))) return json(res, 409, { error: '你已经举报过这条了' });
+      if (c.reports >= 3) c.hidden = true; save();
       return json(res, 200, state());
     }
     // 管理
