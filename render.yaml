@@ -2,6 +2,5 @@ services:
   - type: web
     name: muse-invite-site
     env: node
-    buildCommand: ""
     startCommand: node server.js
     plan: free
