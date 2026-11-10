@@ -231,6 +231,19 @@ const server = http.createServer(async (req, res) => {
       return fs.createReadStream(fp).pipe(res);
     }
     if (p.startsWith('/api/')) return json(res, 404, { error: 'not found' });
+    // 搜索收录：robots / sitemap / IndexNow 验证文件
+    if (p === '/robots.txt') {
+      res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+      return res.end('User-agent: *\nAllow: /\nSitemap: https://muse-invite-site.onrender.com/sitemap.xml\n');
+    }
+    if (p === '/sitemap.xml') {
+      res.writeHead(200, { 'Content-Type': 'application/xml; charset=utf-8' });
+      return res.end('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n<url><loc>https://muse-invite-site.onrender.com/</loc><changefreq>daily</changefreq><priority>1.0</priority></url>\n</urlset>\n');
+    }
+    if (p === '/f719408ca62eb71920e6a05f760cabba.txt') {
+      res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
+      return res.end('f719408ca62eb71920e6a05f760cabba');
+    }
     // 静态文件：只对外提供 index.html
     let file = p;
     if (p === '/' || p.startsWith('/manage/')) file = '/index.html';

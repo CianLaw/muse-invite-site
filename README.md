@@ -1,4 +1,10 @@
-# Muse 邀请码互助站（独立公网版）
+# Muse 邀请码互助站 · Muse Invite Code 分享互助
+
+**免费 Muse 邀请码互助网站**：👉 https://muse-invite-site.onrender.com
+
+找 Muse 邀请码不用买：站里都是网友自发分享的 Muse 邀请码，每天更新一批，能用的标「可用」、失效的单独分区，点一下复制就能兑换。新账号注册后 **48 小时内** 在设置里兑换邀请码，兑换双方各得 10 亿 token。站长邀请码 **95AOAK** 长期置顶在首页。
+
+Looking for a free Muse invite code? This is a community pool of shared Muse invite codes, updated daily, with working/expired codes clearly separated. Site owner's code: **95AOAK**.
 
 一个零依赖的 Node.js 小站，可以部署到公网，任何人打开网址就能复制邀请码、提交分享、晒图和评论（v3）：
 

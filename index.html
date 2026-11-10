@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Muse 邀请码互助站</title>
+<title>Muse 邀请码互助站｜免费 Muse 邀请码每天更新（可用/失效分开标）</title>
+<meta name="description" content="Muse 邀请码免费互助站：网友分享的 Muse 邀请码每天更新一批，能用的标可用、失效的单独分区，点一下复制就能兑换。新账号注册后 48 小时内兑换邀请码，双方各得 10 亿 token。站长邀请码 95AOAK 首页置顶。">
+<meta name="keywords" content="Muse 邀请码,Muse邀请码,muse code,邀请码互助,Muse 兑换码,Muse 注册,95AOAK">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Muse 邀请码互助站｜免费邀请码每天更新">
+<meta property="og:description" content="没码的直接复制去兑，能用的和失效的分开标好。站长码 95AOAK 置顶，新号 48 小时内兑换双方各得 10 亿 token。">
+<meta property="og:url" content="https://muse-invite-site.onrender.com/">
+<link rel="canonical" href="https://muse-invite-site.onrender.com/">
 <meta name="description" content="Muse 邀请码互助：分享你的邀请码，或复制一个去兑换。非官方公益站。">
 <style>
   *{box-sizing:border-box}
@@ -76,6 +83,7 @@
   nav.tabbar button svg{width:22px;height:22px}
   nav.tabbar button.on{background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;box-shadow:0 6px 16px rgba(124,58,237,.35)}
   .bigcode{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:30px;font-weight:800;letter-spacing:3px;text-align:center;margin:8px 0}
+  .promo-box{background:#f6f7fb;border:1px dashed #c9cede;border-radius:12px;padding:10px 12px;font-size:13.5px;line-height:1.65;color:#3c445c}
   footer{color:#94a0b5;font-size:12px;line-height:1.85;margin-top:30px;border-top:1px solid #e6e9f4;padding-top:14px}
   .toast{position:fixed;left:50%;bottom:190px;transform:translateX(-50%);background:#1b2333;color:#fff;padding:10px 18px;border-radius:24px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;max-width:88vw;text-align:center;z-index:60}
   .toast.show{opacity:1}
@@ -185,6 +193,13 @@
       <div class="note">新朋友先用这个，兑完咱们各得 10 亿 token</div>
       <div class="bigcode">95AOAK</div>
       <button class="primary" id="copyPin">复制站长码</button>
+    </div>
+
+    <h3 class="sec">一键推广本站</h3>
+    <p class="sub">点一下复制现成文案，发到群里、论坛、评论区都行。来的人越多，池子里的新码就越多。</p>
+    <div class="panel">
+      <div class="promo-box" id="promoText">Muse 邀请码互助站（免费）：每天更新一批 Muse 邀请码，能用的标可用、失效的单独分区，复制就能兑。站长码 95AOAK 在首页置顶，新号注册后 48 小时内兑换，咱俩各得 10 亿 token 👉 muse-invite-site.onrender.com</div>
+      <div style="margin-top:12px"><button class="primary" id="btnPromo">复制推广语</button></div>
     </div>
 
     <h3 class="sec">我分享的码</h3>
@@ -445,6 +460,7 @@ $('chatSend').onclick = sendChat;
 $('chatText').addEventListener('keydown', e => { if(e.key==='Enter') sendChat(); });
 /* 我的 */
 $('copyPin').onclick = async ()=>{ toast(await copyText('95AOAK') ? '已复制 95AOAK' : '复制失败，码是 95AOAK'); };
+$('btnPromo').onclick = async ()=>{ const t = $('promoText').textContent.trim(); toast(await copyText(t) ? '推广语已复制，去粘贴发送吧' : '复制失败，长按文案手动复制'); };
 async function renderMine(){
   const list = $('myList'); if(!list) return;
   const toks = myTokens();
