@@ -1,0 +1,1 @@
+{"description":"Muse 邀请码互助站（独立公网版）","engines":{"node":">=18"},"name":"muse-invite-site","private":true,"scripts":{"start":"node server.js"},"version":"1.0.0"}

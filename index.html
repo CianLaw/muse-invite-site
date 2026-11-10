@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Muse 邀请码互助站</title>
+<meta name="description" content="Muse 邀请码互助：分享你的邀请码，或复制一个去兑换。非官方公益站。">
+<style>
+  *{box-sizing:border-box} body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f6f8fb;color:#1c2430}
+  header{background:#fff;border-bottom:1px solid #e6ebf2;position:sticky;top:0;z-index:5}
+  .bar{max-width:860px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;gap:10px}
+  .dot{width:12px;height:12px;border-radius:50%;background:#ff5f57;box-shadow:20px 0 #febc2e,40px 0 #28c840}
+  .bar h1{font-size:17px;margin:0 0 0 52px} .tag{font-size:11px;color:#8a94a6;border:1px solid #dbe2ec;border-radius:20px;padding:2px 8px}
+  main{max-width:860px;margin:0 auto;padding:18px 16px 60px}
+  .intro{color:#4a5568;font-size:14px;line-height:1.7}
+  .stat{font-size:14px;color:#4a5568;margin:10px 0 4px} .stat b{color:#1463d8;font-size:18px}
+  .card{background:#fff;border:1px solid #e6ebf2;border-radius:14px;padding:14px 16px;margin:10px 0;box-shadow:0 1px 3px rgba(20,40,80,.04)}
+  .card.grey{opacity:.55} .card .row{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:22px;font-weight:700;letter-spacing:2px}
+  .pin{background:#1463d8;color:#fff;font-size:11px;border-radius:6px;padding:2px 7px}
+  .note{font-size:12px;color:#8a94a6}
+  .prog{height:6px;background:#edf1f7;border-radius:3px;margin-top:10px;overflow:hidden}
+  .prog i{display:block;height:100%;background:linear-gradient(90deg,#1463d8,#4f9cf9);border-radius:3px}
+  .slots{font-size:13px;color:#4a5568;white-space:nowrap}
+  button{border:1px solid #d5dde8;background:#fff;border-radius:9px;padding:8px 14px;font-size:14px;cursor:pointer;min-height:40px}
+  button.primary{background:#1463d8;border-color:#1463d8;color:#fff}
+  button:active{transform:scale(.98)} .grow{flex:1}
+  h2{font-size:16px;margin:26px 0 4px}
+  input,textarea{width:100%;border:1px solid #d5dde8;border-radius:9px;padding:11px;font-size:16px;font-family:inherit;background:#fff}
+  label{font-size:13px;color:#4a5568;display:block;margin:12px 0 6px}
+  .hint{font-size:13px;color:#1463d8;min-height:18px;margin-top:6px}
+  .manage-box{background:#eef6ee;border:1px solid #bfe3bf;border-radius:10px;padding:12px;margin-top:12px;font-size:13px;word-break:break-all;display:none}
+  footer{color:#8a94a6;font-size:12px;line-height:1.8;margin-top:36px;border-top:1px solid #e6ebf2;padding-top:14px}
+  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#1c2430;color:#fff;padding:10px 18px;border-radius:24px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;max-width:88vw;text-align:center}
+  .toast.show{opacity:1}
+  .empty{color:#8a94a6;font-size:14px;padding:14px 0}
+  details{margin-top:26px} summary{cursor:pointer;font-size:15px;font-weight:600}
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <span class="dot"></span>
+  <h1>Muse 邀请码互助站</h1>
+  <span class="tag">非官方</span>
+  <span class="grow"></span>
+  <button id="refreshBtn">换一批</button>
+</div></header>
+<main>
+  <p class="intro">Muse 最近挺火，新用户加入后 48 小时内兑换一个邀请码，双方都能拿到 token 奖励。这个站就是个互助池：有富余名额的把码分享出来，需要的人复制去用。用不了的码点一下「用不了」，攒够 3 次自动下架，池子保持干净。</p>
+  <p class="stat">当前可用 <b id="avail">…</b> 个</p>
+  <div id="pool"></div>
+
+  <h2>分享我的邀请码</h2>
+  <p class="note">把你在 Muse 里复制的整段邀请文字粘进来就行，会自动识别出 6 位码。不收邮箱、手机号等任何个人信息。</p>
+  <label for="shareText">邀请文字</label>
+  <textarea id="shareText" rows="3" placeholder="粘贴整段邀请文字，或直接填 6 位邀请码"></textarea>
+  <div class="hint" id="detectHint"></div>
+  <label for="shareSlots">名额（这个码总共能用几次）</label>
+  <input id="shareSlots" type="number" value="30" min="1" max="999" style="max-width:140px">
+  <div style="margin-top:14px"><button class="primary" id="shareBtn">+ 分享我的邀请码</button></div>
+  <div class="manage-box" id="manageBox"></div>
+
+  <h2>网上搜集的码（未验证）</h2>
+  <p class="note">从 V2EX、NodeLoc 等公开帖子里搜集，原帖大多是几周前发的，名额可能已在别处用满，兑不到别灰心，换一个试试。</p>
+  <div id="collected"></div>
+
+  <details>
+    <summary>管理我分享的码</summary>
+    <p class="note">分享成功后会给你一个管理凭据（或打开管理链接），在这里可以查用量、改剩余名额、删除自己的分享。</p>
+    <label for="mgToken">管理凭据</label>
+    <input id="mgToken" placeholder="粘贴管理凭据">
+    <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+      <button id="mgLookup">查看</button>
+      <button id="mgSave">保存剩余名额</button>
+      <button id="mgDelete">删除这条分享</button>
+    </div>
+    <div id="mgInfo" style="margin-top:12px;font-size:14px"></div>
+    <label for="mgRemain" id="mgRemainLabel" style="display:none">剩余名额</label>
+    <input id="mgRemain" type="number" min="0" style="max-width:140px;display:none">
+  </details>
+
+  <footer>
+    兑换方式：手机 App 里 设置 &gt; Redeem token；网页 muse.ai 里 设置 &gt; General &gt; Usage &gt; Redeem invite code。仅限加入后 48 小时内、每个新账号只能兑换一次。<br>
+    本站为非官方公益互助站，与 Muse 官方无关；码能不能兑成功以 Muse App 内显示为准。
+  </footer>
+</main>
+<div class="toast" id="toast"></div>
+<script>
+const $ = id => document.getElementById(id);
+let state = { codes: [], collected: [], availableCount: 0 };
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
+function rel(iso){ const s=(Date.now()-new Date(iso))/1000; if(s<3600) return Math.max(1,Math.floor(s/60))+' 分钟前'; if(s<86400) return Math.floor(s/3600)+' 小时前'; return Math.floor(s/86400)+' 天前'; }
+function cardHTML(c){
+  const pct = c.totalSlots ? Math.round(c.remaining/c.totalSlots*100) : 0;
+  const grey = c.status!=='available';
+  return `<div class="card ${grey?'grey':''}" data-id="${c.id}">
+    <div class="row">
+      <span class="code">${c.code}</span>
+      ${c.pinned?'<span class="pin">站主置顶</span>':''}
+      <span class="grow"></span>
+      <span class="slots">${c.remaining}/${c.totalSlots} 剩余</span>
+      <button class="primary" data-act="copy" ${grey?'disabled':''}>复制</button>
+      <button data-act="report" ${grey?'disabled':''}>用不了</button>
+    </div>
+    <div class="prog"><i style="width:${pct}%"></i></div>
+    <div class="row" style="margin-top:8px"><span class="note">${c.sourceNote?c.sourceNote+' · ':''}${rel(c.createdAt)}分享${c.status==='reported'?' · 已被多人反馈用不了':c.status==='exhausted'?' · 名额已用完':''}</span></div>
+  </div>`;
+}
+function render(){
+  $('avail').textContent = state.availableCount;
+  $('pool').innerHTML = state.codes.length ? state.codes.map(cardHTML).join('') : '<div class="empty">互助池暂时空了，来分享第一个码吧。</div>';
+  $('collected').innerHTML = state.collected.length ? state.collected.map(cardHTML).join('') : '<div class="empty">最近没有在网上找到新的码</div>';
+}
+async function load(){
+  const r = await fetch('/api/codes'); state = await r.json(); render();
+}
+async function copyText(text){
+  try{ await navigator.clipboard.writeText(text); return true; }
+  catch(e){ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(_){} ta.remove(); return ok; }
+}
+document.addEventListener('click', async e=>{
+  const btn = e.target.closest('button[data-act]'); if(!btn) return;
+  const card = btn.closest('.card'); const id = +card.dataset.id;
+  const all = [...state.codes, ...state.collected]; const c = all.find(x=>x.id===id); if(!c) return;
+  if(btn.dataset.act==='copy'){
+    const ok = await copyText(c.code);
+    toast(ok ? '已复制 '+c.code+'，名额扣 1' : '复制失败，码是 '+c.code+' 请手动输入');
+    const r = await fetch(`/api/codes/${id}/copy`, {method:'POST'}); state = await r.json(); render();
+  } else {
+    if(!confirm('确认反馈 '+c.code+' 用不了？攒够 3 次它会自动下架。')) return;
+    const r = await fetch(`/api/codes/${id}/report`, {method:'POST'}); state = await r.json(); render();
+    toast('已记录反馈，谢谢');
+  }
+});
+$('refreshBtn').onclick = load;
+function extract(text){
+  const up=(text||'').toUpperCase();
+  const m = up.match(/(?:CODE|邀请码)\s*[:：]?\s*([A-Z0-9]{6})\b/) || up.match(/\b[A-Z0-9]{6}\b/);
+  return m ? (m[1]||m[0]) : null;
+}
+$('shareText').addEventListener('input', ()=>{
+  const code = extract($('shareText').value);
+  $('detectHint').textContent = code ? '识别到：'+code : '';
+});
+$('shareBtn').onclick = async ()=>{
+  const rawText = $('shareText').value.trim();
+  if(!extract(rawText)){ toast('没识别到 6 位邀请码，检查一下粘贴内容'); return; }
+  const r = await fetch('/api/codes', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({rawText, totalSlots: $('shareSlots').value})});
+  const data = await r.json();
+  if(!r.ok){ toast(data.error||'提交失败'); return; }
+  const link = location.origin + data.managePath;
+  const box = $('manageBox'); box.style.display='block';
+  box.innerHTML = `已加入列表 ✅<br>保存好这个管理链接，可以查看用了多少、修改或删除。它只显示这一次：<br><a href="${link}">${link}</a><br>管理凭据：<b>${data.manageToken}</b>`;
+  $('shareText').value=''; $('detectHint').textContent='';
+  toast('分享成功'); load();
+};
+// 管理：从 /manage/<token> 打开时自动带入
+const mgMatch = location.pathname.match(/^\/manage\/([A-Za-z0-9]+)/);
+if(mgMatch) $('mgToken').value = mgMatch[1];
+let mgEntry = null;
+$('mgLookup').onclick = async ()=>{
+  const t = $('mgToken').value.trim(); if(!t) return;
+  const r = await fetch('/api/manage/'+t); const d = await r.json();
+  if(!r.ok){ $('mgInfo').textContent = d.error||'查不到'; return; }
+  mgEntry = d.entry;
+  $('mgInfo').innerHTML = `码 <b>${mgEntry.code}</b>：剩余 ${mgEntry.remaining}/${mgEntry.totalSlots}，已被复制 ${mgEntry.usedCount} 次，状态 ${mgEntry.status}`;
+  $('mgRemain').style.display='block'; $('mgRemainLabel').style.display='block'; $('mgRemain').value = mgEntry.remaining;
+};
+$('mgSave').onclick = async ()=>{
+  const t = $('mgToken').value.trim(); if(!t) return;
+  const r = await fetch('/api/manage/'+t, {method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({remaining: $('mgRemain').value})});
+  if(r.ok){ toast('已保存'); $('mgLookup').click(); load(); } else toast('保存失败');
+};
+$('mgDelete').onclick = async ()=>{
+  const t = $('mgToken').value.trim(); if(!t) return;
+  if(!confirm('确认删除你分享的这条码？')) return;
+  const r = await fetch('/api/manage/'+t, {method:'DELETE'});
+  if(r.ok){ toast('已删除'); $('mgInfo').textContent=''; load(); } else toast('删除失败');
+};
+load();
+</script>
+</body>
+</html>

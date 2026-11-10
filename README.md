@@ -1,0 +1,41 @@
+# Muse 邀请码互助站（独立公网版）
+
+一个零依赖的 Node.js 小站，功能和 Muse 里那版一模一样，但可以部署到公网，任何人打开网址就能复制邀请码、提交分享：
+
+- 站主码 **95AOAK** 永久置顶（在 `seed.json` 里改）
+- 预置 40 个网上公开搜集的码（未验证，带来源备注，在 `seed.json` 的 collected 里）
+- 点「复制」真扣 1 个名额，扣完自动变灰
+- 点「用不了」反馈，累计 3 次自动下架
+- 分享表单：粘贴整段邀请文字自动识别 6 位码，不收任何个人信息；提交后发一次性管理链接（`/manage/<凭据>`），可查用量、改名额、删分享
+- 每次打开随机换一批
+
+## 本地运行
+
+```bash
+node server.js          # 默认端口 3000，打开 http://localhost:3000
+```
+
+数据存在 `data/db.json`（首次启动时从 `seed.json` 生成）。想重置数据删掉这个文件重启即可。
+
+## 部署到 Render（免费，自带公网网址）
+
+1. 把这个文件夹推到你自己的 GitHub 仓库（公开私有都行）
+2. 打开 render.com，用 GitHub 登录 → New → Web Service → 选这个仓库
+3. 运行时选 Node，Build Command 留空，Start Command 填 `node server.js`（仓库里带了 `render.yaml`，也可以直接选 Blueprint 自动带入）
+4. 套餐选 Free → Create。等几分钟，得到一个 `https://你的服务名.onrender.com` 网址，这就是公网地址，发给谁都能打开
+
+注意：Render 免费版的磁盘是临时的，服务重启/重新部署后，访客后来提交的码会回到种子状态（置顶码和 40 个搜集码都在代码里，不受影响）。介意的话两个升级法：Render 加一块 Persistent Disk（付费），或把数据层换成免费 Postgres（Supabase/Neon），需要改代码时喊 Muse。
+
+休眠：免费版闲置约 15 分钟会休眠，下一个访客打开要等几十秒唤醒，这是免费版通病。
+
+## 绑自己的域名（可选）
+
+1. 先买域名（如 .club，第一年通常几十块，在阿里云/腾讯云/Cloudflare 都能买）
+2. Render 后台 → 你的服务 → Settings → Custom Domains → Add，填你的域名
+3. 按页面提示去域名商后台加一条 CNAME 记录指向 `你的服务名.onrender.com`
+4. 等 DNS 生效（几分钟到几小时），证书 Render 自动签发，https 直接可用
+
+## 环境变量
+
+- `PORT`：端口（托管平台会自动注入，不用管）
+- `DATA_FILE`：数据文件路径，有持久磁盘时指过去
