@@ -7,59 +7,78 @@
 <meta name="description" content="Muse 邀请码互助：分享你的邀请码，或复制一个去兑换。非官方公益站。">
 <style>
   *{box-sizing:border-box}
-  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f4f6fb;color:#1b2333}
+  body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;background:#f3f5fa;color:#1b2333;padding-bottom:118px}
   a{color:#4f46e5}
-  header{position:sticky;top:0;z-index:10;background:rgba(255,255,255,.86);backdrop-filter:blur(10px);border-bottom:1px solid #e6e9f4}
-  .bar{max-width:920px;margin:0 auto;padding:11px 16px;display:flex;align-items:center;gap:10px}
+  header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.85);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid #e6e9f4}
+  .bar{max-width:920px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
   .logo{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,#6366f1,#a855f7);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:16px}
   .bar h1{font-size:16px;margin:0} .tag{font-size:11px;color:#8a94a6;border:1px solid #dde3f0;border-radius:20px;padding:2px 8px}
   .grow{flex:1}
-  .hero{background:linear-gradient(135deg,#4f46e5,#7c3aed 55%,#c026d3);color:#fff}
-  .hero-in{max-width:920px;margin:0 auto;padding:30px 16px 26px}
-  .hero h2{margin:0 0 8px;font-size:25px;line-height:1.35}
-  .hero p{margin:0;opacity:.92;font-size:14px;line-height:1.75;max-width:640px}
-  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+  main{max-width:920px;margin:0 auto;padding:0 16px}
+  .view{display:none} .view.on{display:block}
+  .hero{background:linear-gradient(135deg,#4f46e5,#7c3aed 55%,#c026d3);color:#fff;border-radius:0 0 26px 26px;margin:0 -16px;padding:24px 20px 20px}
+  .hero h2{margin:0 0 6px;font-size:23px}
+  .hero p{margin:0;opacity:.92;font-size:13px;line-height:1.7}
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
   .chip{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);border-radius:20px;padding:5px 12px;font-size:13px}
   .chip b{font-size:15px}
-  main{max-width:920px;margin:0 auto;padding:20px 16px 64px}
-  h3.sec{font-size:18px;margin:30px 0 4px;display:flex;align-items:center;gap:8px}
-  h3.sec::before{content:"";width:4px;height:18px;border-radius:2px;background:linear-gradient(#6366f1,#a855f7)}
+  h3.sec{font-size:17px;margin:26px 0 4px;display:flex;align-items:center;gap:8px}
+  h3.sec::before{content:"";width:4px;height:17px;border-radius:2px;background:linear-gradient(#6366f1,#a855f7)}
   .sub{color:#66738c;font-size:13px;line-height:1.7;margin:2px 0 10px}
-  .card{background:#fff;border:1px solid #e6e9f4;border-radius:16px;padding:14px 16px;margin:10px 0;box-shadow:0 2px 10px rgba(49,56,120,.05)}
-  .card.grey{opacity:.55}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 4px}
+  .fchip{border:1px solid #d8deee;background:#fff;border-radius:20px;padding:7px 14px;font-size:13px;cursor:pointer;min-height:36px}
+  .fchip.on{background:#1b2333;color:#fff;border-color:#1b2333}
+  .card{background:#fff;border:1px solid #e6e9f4;border-radius:18px;padding:14px 16px;margin:10px 0;box-shadow:0 2px 10px rgba(49,56,120,.05)}
+  .card.grey{opacity:.55;background:#f6f7fa}
   .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:23px;font-weight:800;letter-spacing:2px}
-  .pin{background:linear-gradient(90deg,#f59e0b,#f97316);color:#fff;font-size:11px;border-radius:6px;padding:3px 8px;font-weight:700}
+  .badge{font-size:11px;border-radius:6px;padding:3px 8px;font-weight:700;white-space:nowrap}
+  .b-pin{background:linear-gradient(90deg,#f59e0b,#f97316);color:#fff}
+  .b-ok{background:#dcfce7;color:#15803d}
+  .b-dead{background:#fee2e2;color:#b91c1c}
+  .b-out{background:#e5e7eb;color:#6b7280}
+  .b-unv{background:#fef9c3;color:#a16207}
   .slots{font-size:13px;color:#66738c;white-space:nowrap}
   .prog{height:6px;background:#eef0f8;border-radius:3px;margin-top:10px;overflow:hidden}
   .prog i{display:block;height:100%;background:linear-gradient(90deg,#6366f1,#a855f7);border-radius:3px}
   .note{font-size:12px;color:#94a0b5}
   .thumb{width:100%;max-height:220px;object-fit:cover;border-radius:12px;margin-top:10px;border:1px solid #e6e9f4}
-  button{border:1px solid #d8deee;background:#fff;border-radius:10px;padding:8px 15px;font-size:14px;cursor:pointer;min-height:40px;font-family:inherit}
+  button{border:1px solid #d8deee;background:#fff;border-radius:12px;padding:8px 15px;font-size:14px;cursor:pointer;min-height:40px;font-family:inherit}
   button.primary{background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;color:#fff;font-weight:600}
   button:active{transform:scale(.97)} button:disabled{opacity:.5}
-  input,textarea{width:100%;border:1px solid #d8deee;border-radius:10px;padding:11px;font-size:16px;font-family:inherit;background:#fff}
+  input,textarea{width:100%;border:1px solid #d8deee;border-radius:12px;padding:11px;font-size:16px;font-family:inherit;background:#fff}
   label{font-size:13px;color:#4a5568;display:block;margin:12px 0 6px}
   .hint{font-size:13px;color:#4f46e5;min-height:18px;margin-top:6px;font-weight:600}
-  .panel{background:#fff;border:1px solid #e6e9f4;border-radius:16px;padding:16px;box-shadow:0 2px 10px rgba(49,56,120,.05)}
-  .manage-box{background:#eefbf0;border:1px solid #bbe7c2;border-radius:10px;padding:12px;margin-top:12px;font-size:13px;word-break:break-all;display:none;line-height:1.7}
-  .filebox{border:1.5px dashed #c3cbf5;border-radius:12px;padding:12px;text-align:center;color:#66738c;font-size:13px;background:#f8f9ff}
+  .panel{background:#fff;border:1px solid #e6e9f4;border-radius:18px;padding:16px;box-shadow:0 2px 10px rgba(49,56,120,.05)}
+  .manage-box{background:#eefbf0;border:1px solid #bbe7c2;border-radius:12px;padding:12px;margin-top:12px;font-size:13px;word-break:break-all;display:none;line-height:1.7}
+  .filebox{border:1.5px dashed #c3cbf5;border-radius:14px;padding:12px;text-align:center;color:#66738c;font-size:13px;background:#f8f9ff;cursor:pointer}
   .filebox img{max-width:100%;max-height:180px;border-radius:10px;margin-top:8px}
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
-  .gcard{background:#fff;border:1px solid #e6e9f4;border-radius:16px;overflow:hidden;box-shadow:0 2px 10px rgba(49,56,120,.05)}
+  .gcard{background:#fff;border:1px solid #e6e9f4;border-radius:18px;overflow:hidden;box-shadow:0 2px 10px rgba(49,56,120,.05)}
   .gcard img{width:100%;height:180px;object-fit:cover;display:block}
   .gcard .gb{padding:10px 12px}
   .gcap{font-size:14px;line-height:1.6;word-break:break-word}
-  .comment{border-bottom:1px solid #eef0f8;padding:11px 2px}
-  .comment:last-child{border-bottom:none}
-  .cname{font-weight:700;font-size:14px}
-  .ctext{font-size:14px;line-height:1.65;margin-top:3px;word-break:break-word}
   .mini{font-size:12px;color:#a3adc2;background:none;border:none;padding:2px 4px;min-height:0;cursor:pointer}
   .empty{color:#94a0b5;font-size:14px;padding:12px 0}
-  footer{color:#94a0b5;font-size:12px;line-height:1.85;margin-top:38px;border-top:1px solid #e6e9f4;padding-top:14px}
-  .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#1b2333;color:#fff;padding:10px 18px;border-radius:24px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;max-width:88vw;text-align:center;z-index:50}
+  /* 聊天 */
+  .bubble{display:flex;gap:9px;margin:12px 0;align-items:flex-start}
+  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#93c5fd,#c4b5fd);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:none}
+  .bb{background:#fff;border:1px solid #e6e9f4;border-radius:4px 16px 16px 16px;padding:9px 12px;max-width:82%;box-shadow:0 1px 4px rgba(49,56,120,.05)}
+  .bb .who{font-size:12px;color:#8a94a6;margin-bottom:3px}
+  .bb .txt{font-size:14px;line-height:1.65;word-break:break-word}
+  .chatbar{position:sticky;bottom:104px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);border:1px solid #e6e9f4;border-radius:18px;padding:10px;box-shadow:0 4px 18px rgba(49,56,120,.08);margin-top:14px}
+  /* 底部液态玻璃导航 */
+  nav.tabbar{position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:30;max-width:520px;margin:0 auto;
+    background:rgba(255,255,255,.55);backdrop-filter:blur(22px) saturate(1.7);-webkit-backdrop-filter:blur(22px) saturate(1.7);
+    border:1px solid rgba(255,255,255,.75);border-radius:30px;box-shadow:0 12px 34px rgba(31,38,80,.20), inset 0 1px 0 rgba(255,255,255,.9);
+    display:flex;padding:7px}
+  nav.tabbar button{flex:1;border:none;background:transparent;border-radius:23px;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;color:#5b6a86;padding:5px 0}
+  nav.tabbar button svg{width:22px;height:22px}
+  nav.tabbar button.on{background:linear-gradient(135deg,#6366f1,#a855f7);color:#fff;box-shadow:0 6px 16px rgba(124,58,237,.35)}
+  .bigcode{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:30px;font-weight:800;letter-spacing:3px;text-align:center;margin:8px 0}
+  footer{color:#94a0b5;font-size:12px;line-height:1.85;margin-top:30px;border-top:1px solid #e6e9f4;padding-top:14px}
+  .toast{position:fixed;left:50%;bottom:190px;transform:translateX(-50%);background:#1b2333;color:#fff;padding:10px 18px;border-radius:24px;font-size:14px;opacity:0;transition:.25s;pointer-events:none;max-width:88vw;text-align:center;z-index:60}
   .toast.show{opacity:1}
-  details{margin-top:30px} summary{cursor:pointer;font-size:16px;font-weight:700}
 </style>
 </head>
 <body>
@@ -68,126 +87,195 @@
   <h1>Muse 邀请码互助站</h1>
   <span class="tag">非官方 · 公益</span>
   <span class="grow"></span>
-  <button id="refreshBtn">换一批</button>
+  <button id="refreshBtn">刷新</button>
 </div></header>
 
-<div class="hero"><div class="hero-in">
-  <h2>有码大家用，用完互报信</h2>
-  <p>Muse 新用户加入 48 小时内兑换一个邀请码，双方都能拿到 token 奖励。有富余名额就分享出来，需要的人复制去用；兑成功的晒个图，没兑上的点「用不了」，池子靠大家一起保持干净。</p>
-  <div class="chips">
-    <span class="chip">当前可用 <b id="stAvail">…</b> 个</span>
-    <span class="chip">互助池共 <b id="stShared">…</b> 条</span>
-    <span class="chip">晒图 <b id="stGallery">…</b> 张</span>
-    <span class="chip">留言 <b id="stComments">…</b> 条</span>
-  </div>
-</div></div>
-
 <main>
-  <h3 class="sec">邀请码池</h3>
-  <div id="pool"></div>
-
-  <h3 class="sec">分享我的邀请码</h3>
-  <p class="sub">粘贴整段邀请文字会自动识别 6 位码，不收任何个人信息。可以顺手附一张图（比如你的邀请页面截图），会跟码一起展示。</p>
-  <div class="panel">
-    <label for="shareText">邀请文字</label>
-    <textarea id="shareText" rows="3" placeholder="粘贴整段邀请文字，或直接填 6 位邀请码"></textarea>
-    <div class="hint" id="detectHint"></div>
-    <label for="shareSlots">名额（这个码总共能用几次）</label>
-    <input id="shareSlots" type="number" value="30" min="1" max="999" style="max-width:140px">
-    <label>附一张图（可选，2MB 以内）</label>
-    <div class="filebox" id="shareFileBox">
-      <span>点这里选图片</span>
-      <input type="file" id="shareFile" accept="image/*" style="display:none">
-      <div id="sharePreview"></div>
-    </div>
-    <div style="margin-top:14px"><button class="primary" id="shareBtn">+ 分享我的邀请码</button></div>
-    <div class="manage-box" id="manageBox"></div>
-  </div>
-
-  <h3 class="sec">晒图墙</h3>
-  <p class="sub">兑成功了？晒一张截图给大家沾沾喜气。也可以晒你的 Muse 使用日常。不当图片会被举报，攒够 3 次自动隐藏。</p>
-  <div class="panel" style="margin-bottom:12px">
-    <div class="filebox" id="galFileBox">
-      <span>点这里选图片（2MB 以内）</span>
-      <input type="file" id="galFile" accept="image/*" style="display:none">
-      <div id="galPreview"></div>
-    </div>
-    <label for="galCaption">说明</label>
-    <input id="galCaption" placeholder="比如：用站长的码兑成功了，感谢！">
-    <label for="galName">你的昵称（可空）</label>
-    <input id="galName" placeholder="匿名" style="max-width:220px">
-    <div style="margin-top:14px"><button class="primary" id="galBtn">发到晒图墙</button></div>
-  </div>
-  <div class="grid" id="gallery"></div>
-
-  <h3 class="sec">评论区</h3>
-  <p class="sub">打个招呼、反馈哪个码失效了、许愿求个码，都行。文明发言，不当评论被举报 3 次自动隐藏。</p>
-  <div class="panel">
-    <div id="comments"></div>
-    <label for="cmtName">昵称（可空）</label>
-    <input id="cmtName" placeholder="匿名" style="max-width:220px">
-    <label for="cmtText">写评论</label>
-    <textarea id="cmtText" rows="3" placeholder="说点什么…（300 字以内）"></textarea>
-    <div style="margin-top:12px"><button class="primary" id="cmtBtn">发表评论</button></div>
-  </div>
-
-  <h3 class="sec">网上搜集的码（未验证）</h3>
-  <p class="sub">从 V2EX、NodeLoc 等公开帖子搜集，原帖大多是几周前发的，名额可能已在别处用满，兑不到换一个试试。</p>
-  <div id="collected"></div>
-
-  <details>
-    <summary>管理我分享的码</summary>
-    <div class="panel" style="margin-top:10px">
-      <p class="sub">分享成功后会给你一个管理凭据（或打开管理链接），在这里可以查用量、改剩余名额、删除自己的分享。</p>
-      <label for="mgToken">管理凭据</label>
-      <input id="mgToken" placeholder="粘贴管理凭据">
-      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-        <button id="mgLookup">查看</button>
-        <button id="mgSave">保存剩余名额</button>
-        <button id="mgDelete">删除这条分享</button>
+  <!-- ===== 首页 ===== -->
+  <section class="view on" id="view-home">
+    <div class="hero">
+      <h2>有码大家用，用完互报信</h2>
+      <p>新用户加入 48 小时内兑换邀请码，双方各得 10 亿 token。下面绿色「可用」的放心复制；灰掉的是已用完或被多人反馈失效的，别试了。</p>
+      <div class="chips">
+        <span class="chip">可用 <b id="stAvail">…</b></span>
+        <span class="chip">池子共 <b id="stShared">…</b></span>
+        <span class="chip">晒图 <b id="stGallery">…</b></span>
+        <span class="chip">留言 <b id="stComments">…</b></span>
       </div>
-      <div id="mgInfo" style="margin-top:12px;font-size:14px"></div>
-      <label for="mgRemain" id="mgRemainLabel" style="display:none">剩余名额</label>
-      <input id="mgRemain" type="number" min="0" style="max-width:140px;display:none">
     </div>
-  </details>
 
-  <footer>
-    兑换方式：手机 App 里 设置 &gt; Redeem token；网页 muse.ai 里 设置 &gt; General &gt; Usage &gt; Redeem invite code。仅限加入后 48 小时内、每个新账号只能兑换一次。<br>
-    本站为非官方公益互助站，与 Muse 官方无关；码能不能兑成功以 Muse App 内显示为准。访客上传的图片与评论由发布者负责，请勿上传隐私信息。
-  </footer>
+    <div class="filters" id="filters">
+      <button class="fchip on" data-f="all">全部</button>
+      <button class="fchip" data-f="ok">只看可用</button>
+      <button class="fchip" data-f="dead">只看失效</button>
+    </div>
+
+    <h3 class="sec">互助池 · 网友分享的码</h3>
+    <div id="pool"></div>
+
+    <h3 class="sec">网上搜集的新码（未验证）</h3>
+    <p class="sub">2026-11-10 刚更新的一批：来自 AppInn 互助帖（今天发的）、CodeLoad（11月9日更新）、V2EX 近期帖。越靠前越新，先试前面的；仍标未验证，兑不到在卡片上点「用不了」帮后面的人排除。</p>
+    <div id="collected"></div>
+
+    <div id="deadWrap">
+      <h3 class="sec">已失效 / 已用完</h3>
+      <p class="sub">这些已经被反馈失效或名额用完，列出来是免得你再白试。</p>
+      <div id="deadpool"></div>
+    </div>
+
+    <h3 class="sec">分享我的邀请码</h3>
+    <p class="sub">粘贴整段邀请文字会自动识别 6 位码，不收任何个人信息。可以附一张图，会跟码一起展示。分享成功后会自动记到「我的」页里。</p>
+    <div class="panel">
+      <label for="shareText">邀请文字</label>
+      <textarea id="shareText" rows="3" placeholder="粘贴整段邀请文字，或直接填 6 位邀请码"></textarea>
+      <div class="hint" id="detectHint"></div>
+      <label for="shareSlots">名额（这个码总共能用几次）</label>
+      <input id="shareSlots" type="number" value="30" min="1" max="999" style="max-width:140px">
+      <label>附一张图（可选，2MB 以内）</label>
+      <div class="filebox" id="shareFileBox">
+        <span>点这里选图片</span>
+        <input type="file" id="shareFile" accept="image/*" style="display:none">
+        <div id="sharePreview"></div>
+      </div>
+      <div style="margin-top:14px"><button class="primary" id="shareBtn">+ 分享我的邀请码</button></div>
+      <div class="manage-box" id="manageBox"></div>
+    </div>
+
+    <h3 class="sec">晒图墙</h3>
+    <p class="sub">兑成功了晒个图沾沾喜气。不当图片会被举报，攒够 3 次自动隐藏。</p>
+    <div class="panel" style="margin-bottom:12px">
+      <div class="filebox" id="galFileBox">
+        <span>点这里选图片（2MB 以内）</span>
+        <input type="file" id="galFile" accept="image/*" style="display:none">
+        <div id="galPreview"></div>
+      </div>
+      <label for="galCaption">说明</label>
+      <input id="galCaption" placeholder="比如：用站长的码兑成功了，感谢！">
+      <label for="galName">你的昵称（可空）</label>
+      <input id="galName" class="nickInput" placeholder="匿名" style="max-width:220px">
+      <div style="margin-top:14px"><button class="primary" id="galBtn">发到晒图墙</button></div>
+    </div>
+    <div class="grid" id="gallery"></div>
+
+    <footer>
+      兑换方式：手机 App 里 设置 &gt; Redeem token；网页 muse.ai 里 设置 &gt; General &gt; Usage &gt; Redeem invite code。仅限加入后 48 小时内、每个新账号只能兑换一次。<br>
+      本站为非官方公益互助站，与 Muse 官方无关；码能不能兑成功以 Muse App 内显示为准。访客上传的图片与评论由发布者负责，请勿上传隐私信息。
+    </footer>
+  </section>
+
+  <!-- ===== 聊天 ===== -->
+  <section class="view" id="view-chat">
+    <h3 class="sec">聊天区</h3>
+    <p class="sub">反馈哪个码失效了、许愿求码、打招呼都行。不当发言被举报 3 次自动隐藏。</p>
+    <label for="chatNick" style="margin-top:4px">我的昵称</label>
+    <input id="chatNick" class="nickInput" placeholder="匿名" style="max-width:220px">
+    <div id="chatList"></div>
+    <div class="chatbar">
+      <div class="row" style="flex-wrap:nowrap">
+        <input id="chatText" placeholder="说点什么…（300 字以内）" maxlength="300">
+        <button class="primary" id="chatSend" style="flex:none">发送</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 我的 ===== -->
+  <section class="view" id="view-me">
+    <h3 class="sec">站长的码</h3>
+    <div class="panel" style="text-align:center">
+      <div class="note">新朋友先用这个，兑完咱们各得 10 亿 token</div>
+      <div class="bigcode">95AOAK</div>
+      <button class="primary" id="copyPin">复制站长码</button>
+    </div>
+
+    <h3 class="sec">我分享的码</h3>
+    <p class="sub">你在这台设备上分享过的码会自动出现在这里，能看剩余名额、改名额、删除。换设备了用管理凭据手动添加。</p>
+    <div id="myList"></div>
+    <div class="panel">
+      <label for="mgToken" style="margin-top:0">用管理凭据添加</label>
+      <input id="mgToken" placeholder="粘贴分享时给你的管理凭据">
+      <div style="margin-top:12px"><button id="mgAdd">添加</button></div>
+      <div id="mgInfo" style="margin-top:10px;font-size:13px"></div>
+    </div>
+
+    <h3 class="sec">兑换须知</h3>
+    <div class="panel" style="font-size:14px;line-height:1.9">
+      1. 必须是<b>新账号</b>：加入 Muse 后 <b>48 小时内</b>才能兑换，过期入口消失。<br>
+      2. 每个账号<b>只能兑换一次</b>，兑谁的都一样，各得 10 亿 token，永久有效。<br>
+      3. 入口：App 设置 &gt; Redeem token；网页 muse.ai 设置 &gt; General &gt; Usage &gt; Redeem invite code。<br>
+      4. 提示「无效」多半是码被用满了，换一个试，别跟一个死码较劲。
+    </div>
+
+    <h3 class="sec">关于本站</h3>
+    <div class="panel" style="font-size:14px;line-height:1.9">
+      非官方公益互助站，仿照抖音上「远坂小姐拜托了」的 Muse 邀请码互助站做的。码池靠大家自发维护：能用的点复制，用不了的点反馈，攒够 3 次自动下架。
+    </div>
+  </section>
 </main>
+
+<nav class="tabbar">
+  <button data-view="home" class="on">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg>
+    首页
+  </button>
+  <button data-view="chat">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.5 0-3-.4-4.2-1.1L3 20l1.1-5.3A8.5 8.5 0 1 1 21 11.5z"/></svg>
+    聊天
+  </button>
+  <button data-view="me">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-3.6 4.5-5 8-5s6.5 1.4 8 5"/></svg>
+    我的
+  </button>
+</nav>
 <div class="toast" id="toast"></div>
+
 <script>
 const $ = id => document.getElementById(id);
 let state = { codes: [], collected: [], availableCount: 0, gallery: [], comments: [], stats: {} };
+let filter = 'all';
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2200); }
 function esc(s){ return String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function rel(iso){ const s=(Date.now()-new Date(iso))/1000; if(s<60) return '刚刚'; if(s<3600) return Math.floor(s/60)+' 分钟前'; if(s<86400) return Math.floor(s/3600)+' 小时前'; return Math.floor(s/86400)+' 天前'; }
+function badge(c){
+  if(c.pinned) return '<span class="badge b-pin">站主置顶</span>';
+  if(c.status==='available') return c.collected ? '<span class="badge b-unv">未验证 · 可试</span>' : '<span class="badge b-ok">可用</span>';
+  if(c.status==='reported') return '<span class="badge b-dead">已失效</span>';
+  return '<span class="badge b-out">名额用完</span>';
+}
 function cardHTML(c){
   const pct = c.totalSlots ? Math.round(c.remaining/c.totalSlots*100) : 0;
   const grey = c.status!=='available';
   return `<div class="card ${grey?'grey':''}" data-kind="code" data-id="${c.id}">
     <div class="row">
-      <span class="code">${esc(c.code)}</span>
-      ${c.pinned?'<span class="pin">站主置顶</span>':''}
+      <span class="code">${esc(c.code)}</span>${badge(c)}
       <span class="grow"></span>
       <span class="slots">${c.remaining}/${c.totalSlots} 剩余</span>
       <button class="primary" data-act="copy" ${grey?'disabled':''}>复制</button>
       <button data-act="report" ${grey?'disabled':''}>用不了</button>
     </div>
     <div class="prog"><i style="width:${pct}%"></i></div>
-    <div class="row" style="margin-top:8px"><span class="note">${c.sourceNote?esc(c.sourceNote)+' · ':''}${rel(c.createdAt)}分享${c.status==='reported'?' · 已被多人反馈用不了':c.status==='exhausted'?' · 名额已用完':''}</span></div>
+    <div class="row" style="margin-top:8px"><span class="note">${c.sourceNote?esc(c.sourceNote)+' · ':''}${rel(c.createdAt)}分享</span></div>
     ${c.image?`<img class="thumb" src="${esc(c.image)}" alt="分享者附图" loading="lazy">`:''}
   </div>`;
+}
+function passFilter(c){
+  if(filter==='ok') return c.status==='available';
+  if(filter==='dead') return c.status!=='available';
+  return true;
 }
 function render(){
   $('stAvail').textContent = state.availableCount;
   $('stShared').textContent = state.stats.sharedCount ?? state.codes.length;
   $('stGallery').textContent = state.stats.galleryCount ?? state.gallery.length;
   $('stComments').textContent = state.stats.commentCount ?? state.comments.length;
-  $('pool').innerHTML = state.codes.length ? state.codes.map(cardHTML).join('') : '<div class="empty">互助池暂时空了，来分享第一个码吧。</div>';
-  $('collected').innerHTML = state.collected.length ? state.collected.map(cardHTML).join('') : '<div class="empty">最近没有在网上找到新的码</div>';
+  const poolOk = state.codes.filter(c => c.status==='available' && passFilter(c));
+  const poolDead = state.codes.filter(c => c.status!=='available');
+  const colOk = state.collected.filter(c => c.status==='available' && passFilter(c));
+  const colDead = state.collected.filter(c => c.status!=='available');
+  $('pool').innerHTML = poolOk.length ? poolOk.map(cardHTML).join('') : '<div class="empty">这个筛选下没有码。</div>';
+  $('collected').innerHTML = colOk.length ? colOk.map(cardHTML).join('') : '<div class="empty">这个筛选下没有码。</div>';
+  const dead = [...poolDead, ...colDead];
+  $('deadWrap').style.display = (dead.length && filter!=='ok') ? 'block' : 'none';
+  $('deadpool').innerHTML = dead.map(cardHTML).join('');
   $('gallery').innerHTML = state.gallery.length ? state.gallery.map(g => `
     <div class="gcard" data-kind="gallery" data-id="${g.id}">
       <img src="${esc(g.url)}" alt="用户晒图" loading="lazy">
@@ -196,12 +284,16 @@ function render(){
         <div class="row" style="margin-top:6px"><span class="note">${esc(g.name)} · ${rel(g.createdAt)}</span><span class="grow"></span><button class="mini" data-act="greport">举报</button></div>
       </div>
     </div>`).join('') : '<div class="empty">还没有人晒图，来做第一个。</div>';
-  $('comments').innerHTML = state.comments.length ? state.comments.map(c => `
-    <div class="comment" data-kind="comment" data-id="${c.id}">
-      <span class="cname">${esc(c.name)}</span> <span class="note">${rel(c.createdAt)}</span>
-      <button class="mini" data-act="creport" style="float:right">举报</button>
-      <div class="ctext">${esc(c.text)}</div>
-    </div>`).join('') : '<div class="empty">还没有评论，来说第一句。</div>';
+  const chats = [...state.comments].reverse();
+  $('chatList').innerHTML = chats.length ? chats.map(c => `
+    <div class="bubble" data-kind="comment" data-id="${c.id}">
+      <span class="avatar">${esc((c.name||'匿').slice(0,1))}</span>
+      <div class="bb">
+        <div class="who">${esc(c.name)} · ${rel(c.createdAt)} <button class="mini" data-act="creport">举报</button></div>
+        <div class="txt">${esc(c.text)}</div>
+      </div>
+    </div>`).join('') : '<div class="empty">还没有人说话，来打个招呼。</div>';
+  renderMine();
 }
 async function load(){
   const r = await fetch('/api/codes'); state = await r.json(); render();
@@ -210,6 +302,24 @@ async function copyText(text){
   try{ await navigator.clipboard.writeText(text); return true; }
   catch(e){ const ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); let ok=false; try{ ok=document.execCommand('copy'); }catch(_){} ta.remove(); return ok; }
 }
+/* 底部导航切换 */
+document.querySelectorAll('nav.tabbar button').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('nav.tabbar button').forEach(x => x.classList.toggle('on', x===b));
+    document.querySelectorAll('.view').forEach(v => v.classList.toggle('on', v.id==='view-'+b.dataset.view));
+    window.scrollTo({top:0});
+    if(b.dataset.view==='chat'){ const l=$('chatList'); window.scrollTo({top: document.body.scrollHeight}); }
+  };
+});
+function go(view){ document.querySelector(`nav.tabbar button[data-view="${view}"]`).click(); }
+/* 筛选 */
+$('filters').addEventListener('click', e => {
+  const b = e.target.closest('.fchip'); if(!b) return;
+  filter = b.dataset.f;
+  document.querySelectorAll('.fchip').forEach(x => x.classList.toggle('on', x===b));
+  render();
+});
+$('refreshBtn').onclick = load;
 document.addEventListener('click', async e=>{
   const btn = e.target.closest('button[data-act]'); if(!btn) return;
   const wrap = btn.closest('[data-kind]'); if(!wrap) return;
@@ -221,7 +331,7 @@ document.addEventListener('click', async e=>{
       toast(ok ? '已复制 '+c.code+'，名额扣 1' : '复制失败，码是 '+c.code+' 请手动输入');
       const r = await fetch(`/api/codes/${id}/copy`, {method:'POST'}); state = await r.json(); render();
     } else {
-      if(!confirm('确认反馈 '+c.code+' 用不了？攒够 3 次它会自动下架。')) return;
+      if(!confirm('确认反馈 '+c.code+' 用不了？攒够 3 次它会进「已失效」区。')) return;
       const r = await fetch(`/api/codes/${id}/report`, {method:'POST'}); state = await r.json(); render();
       toast('已记录反馈，谢谢');
     }
@@ -230,12 +340,12 @@ document.addEventListener('click', async e=>{
     const r = await fetch(`/api/gallery/${id}/report`, {method:'POST'}); state = await r.json(); render();
     toast('已举报');
   } else if(kind==='comment' && btn.dataset.act==='creport'){
-    if(!confirm('举报这条评论？攒够 3 次会自动隐藏。')) return;
+    if(!confirm('举报这条发言？攒够 3 次会自动隐藏。')) return;
     const r = await fetch(`/api/comments/${id}/report`, {method:'POST'}); state = await r.json(); render();
     toast('已举报');
   }
 });
-$('refreshBtn').onclick = load;
+/* 图片处理 */
 function fileToDataURL(file){
   return new Promise((resolve, reject) => {
     if(!file) return resolve(null);
@@ -264,6 +374,12 @@ function bindFileBox(boxId, inputId, previewId){
 }
 bindFileBox('shareFileBox', 'shareFile', 'sharePreview');
 bindFileBox('galFileBox', 'galFile', 'galPreview');
+/* 昵称（多处同步+记住） */
+function setNick(v){ localStorage.setItem('muse_nick', v||''); document.querySelectorAll('.nickInput, #chatNick').forEach(i => { if(i.value!==v) i.value = v||''; }); }
+document.querySelectorAll('.nickInput, #chatNick').forEach(i => i.addEventListener('input', () => setNick(i.value)));
+setNick(localStorage.getItem('muse_nick') || '');
+function myNick(){ return (localStorage.getItem('muse_nick') || '').trim(); }
+/* 分享码 */
 function extract(text){
   const up=(text||'').toUpperCase();
   const m = up.match(/(?:CODE|邀请码)\s*[:：]?\s*([A-Z0-9]{6})\b/) || up.match(/\b[A-Z0-9]{6}\b/);
@@ -273,60 +389,89 @@ $('shareText').addEventListener('input', ()=>{
   const code = extract($('shareText').value);
   $('detectHint').textContent = code ? '识别到：'+code : '';
 });
+function myTokens(){ try{ return JSON.parse(localStorage.getItem('muse_tokens')||'[]'); }catch(e){ return []; } }
+function saveToken(t){ const a = myTokens(); if(!a.includes(t)){ a.push(t); localStorage.setItem('muse_tokens', JSON.stringify(a)); } }
+function dropToken(t){ localStorage.setItem('muse_tokens', JSON.stringify(myTokens().filter(x=>x!==t))); }
 $('shareBtn').onclick = async ()=>{
   const rawText = $('shareText').value.trim();
   if(!extract(rawText)){ toast('没识别到 6 位邀请码，检查一下粘贴内容'); return; }
   const r = await fetch('/api/codes', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({rawText, totalSlots: $('shareSlots').value, imageDataUrl: $('shareFileBox').dataset.url || null})});
   const data = await r.json();
   if(!r.ok){ toast(data.error||'提交失败'); return; }
+  saveToken(data.manageToken);
   const link = location.origin + data.managePath;
   const box = $('manageBox'); box.style.display='block';
-  box.innerHTML = `已加入列表 ✅<br>保存好这个管理链接，可以查看用了多少、修改或删除。它只显示这一次：<br><a href="${link}">${link}</a><br>管理凭据：<b>${data.manageToken}</b>`;
+  box.innerHTML = `已加入列表 ✅ 并记到「我的」页。<br>管理链接（只显示这一次，建议保存）：<br><a href="${link}">${link}</a>`;
   $('shareText').value=''; $('detectHint').textContent=''; $('sharePreview').innerHTML=''; delete $('shareFileBox').dataset.url; $('shareFile').value='';
   toast('分享成功'); load();
 };
+/* 晒图 */
 $('galBtn').onclick = async ()=>{
   const dataUrl = $('galFileBox').dataset.url;
   if(!dataUrl){ toast('先选一张图片'); return; }
-  const r = await fetch('/api/gallery', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({dataUrl, caption: $('galCaption').value, name: $('galName').value})});
+  const r = await fetch('/api/gallery', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({dataUrl, caption: $('galCaption').value, name: myNick()})});
   const data = await r.json();
   if(!r.ok){ toast(data.error||'发图失败'); return; }
   state = data; render();
   $('galPreview').innerHTML=''; delete $('galFileBox').dataset.url; $('galFile').value=''; $('galCaption').value='';
   toast('已发到晒图墙');
 };
-$('cmtBtn').onclick = async ()=>{
-  const text = $('cmtText').value.trim();
-  if(!text){ toast('评论不能为空'); return; }
-  const r = await fetch('/api/comments', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name: $('cmtName').value, text})});
+/* 聊天 */
+async function sendChat(){
+  const text = $('chatText').value.trim();
+  if(!text){ toast('先写点什么'); return; }
+  const r = await fetch('/api/comments', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({name: myNick(), text})});
   const data = await r.json();
-  if(!r.ok){ toast(data.error||'发表失败'); return; }
-  state = data; render(); $('cmtText').value='';
-  toast('评论已发表');
+  if(!r.ok){ toast(data.error||'发送失败'); return; }
+  state = data; render(); $('chatText').value='';
+  window.scrollTo({top: document.body.scrollHeight});
+}
+$('chatSend').onclick = sendChat;
+$('chatText').addEventListener('keydown', e => { if(e.key==='Enter') sendChat(); });
+/* 我的 */
+$('copyPin').onclick = async ()=>{ toast(await copyText('95AOAK') ? '已复制 95AOAK' : '复制失败，码是 95AOAK'); };
+async function renderMine(){
+  const list = $('myList'); if(!list) return;
+  const toks = myTokens();
+  if(!toks.length){ list.innerHTML = '<div class="empty">还没有记录。在首页分享一个码，它会自动出现在这里。</div>'; return; }
+  const parts = [];
+  for(const t of toks){
+    try{
+      const r = await fetch('/api/manage/'+t); const d = await r.json();
+      if(!r.ok){ parts.push(`<div class="card grey"><span class="note">一条记录已失效（可能已被删除）</span> <button class="mini" onclick="dropToken('${t}');renderMine()">移除</button></div>`); continue; }
+      const c = d.entry;
+      parts.push(`<div class="card">
+        <div class="row"><span class="code" style="font-size:20px">${esc(c.code)}</span>${badge(c)}
+        <span class="grow"></span><span class="slots">剩余 ${c.remaining}/${c.totalSlots} · 被复制 ${c.usedCount} 次</span></div>
+        <div class="row" style="margin-top:10px">
+          <input type="number" min="0" value="${c.remaining}" id="rem-${t}" style="max-width:110px">
+          <button onclick="saveRemain('${t}')">保存名额</button>
+          <button onclick="delMine('${t}')">删除</button>
+        </div></div>`);
+    }catch(e){ /* 网络问题时跳过 */ }
+  }
+  list.innerHTML = parts.join('');
+}
+window.saveRemain = async t => {
+  const v = $('rem-'+t).value;
+  const r = await fetch('/api/manage/'+t, {method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({remaining: v})});
+  if(r.ok){ toast('已保存'); load(); } else toast('保存失败');
 };
-const mgMatch = location.pathname.match(/^\/manage\/([A-Za-z0-9]+)/);
-if(mgMatch) $('mgToken').value = mgMatch[1];
-let mgEntry = null;
-$('mgLookup').onclick = async ()=>{
-  const t = $('mgToken').value.trim(); if(!t) return;
-  const r = await fetch('/api/manage/'+t); const d = await r.json();
-  if(!r.ok){ $('mgInfo').textContent = d.error||'查不到'; return; }
-  mgEntry = d.entry;
-  $('mgInfo').innerHTML = `码 <b>${esc(mgEntry.code)}</b>：剩余 ${mgEntry.remaining}/${mgEntry.totalSlots}，已被复制 ${mgEntry.usedCount} 次，状态 ${mgEntry.status}`;
-  $('mgRemain').style.display='block'; $('mgRemainLabel').style.display='block'; $('mgRemain').value = mgEntry.remaining;
-};
-$('mgSave').onclick = async ()=>{
-  const t = $('mgToken').value.trim(); if(!t) return;
-  const r = await fetch('/api/manage/'+t, {method:'PATCH', headers:{'Content-Type':'application/json'}, body: JSON.stringify({remaining: $('mgRemain').value})});
-  if(r.ok){ toast('已保存'); $('mgLookup').click(); load(); } else toast('保存失败');
-};
-$('mgDelete').onclick = async ()=>{
-  const t = $('mgToken').value.trim(); if(!t) return;
+window.delMine = async t => {
   if(!confirm('确认删除你分享的这条码？')) return;
   const r = await fetch('/api/manage/'+t, {method:'DELETE'});
-  if(r.ok){ toast('已删除'); $('mgInfo').textContent=''; load(); } else toast('删除失败');
+  if(r.ok){ dropToken(t); toast('已删除'); load(); } else toast('删除失败');
+};
+window.dropToken = dropToken; window.renderMine = renderMine;
+$('mgAdd').onclick = async ()=>{
+  const t = $('mgToken').value.trim(); if(!t) return;
+  const r = await fetch('/api/manage/'+t);
+  if(!r.ok){ $('mgInfo').textContent = '凭据无效，查不到这条分享'; return; }
+  saveToken(t); $('mgToken').value=''; $('mgInfo').textContent = '已添加，去上面列表看';
+  renderMine();
 };
 load();
+setInterval(()=>{ load(); }, 30000);
 </script>
 </body>
 </html>
