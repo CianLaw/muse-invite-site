@@ -109,6 +109,8 @@
         <span class="chip">池子共 <b id="stShared">…</b></span>
         <span class="chip">晒图 <b id="stGallery">…</b></span>
         <span class="chip">留言 <b id="stComments">…</b></span>
+        <span class="chip">今日访问 <b id="stToday">…</b></span>
+        <span class="chip">累计访问 <b id="stViews">…</b></span>
       </div>
     </div>
 
@@ -291,6 +293,8 @@ function render(){
   $('stShared').textContent = state.stats.sharedCount ?? state.codes.length;
   $('stGallery').textContent = state.stats.galleryCount ?? state.gallery.length;
   $('stComments').textContent = state.stats.commentCount ?? state.comments.length;
+  $('stToday').textContent = state.stats.todayViews ?? 0;
+  $('stViews').textContent = state.stats.views ?? 0;
   const poolOk = state.codes.filter(c => c.status==='available' && passFilter(c));
   const poolDead = state.codes.filter(c => c.status!=='available');
   const colOk = state.collected.filter(c => c.status==='available' && passFilter(c));
@@ -501,7 +505,7 @@ $('mgAdd').onclick = async ()=>{
   saveToken(t); $('mgToken').value=''; $('mgInfo').textContent = '已添加，去上面列表看';
   renderMine();
 };
-load();
+fetch('/api/visit', {method:'POST'}).catch(()=>{}).finally(()=>load());
 setInterval(()=>{ load(); }, 30000);
 </script>
 </body>

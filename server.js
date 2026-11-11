@@ -32,6 +32,8 @@ function load() {
   for (const c of db.codes) c.reporters = c.reporters || [];
   for (const g of db.gallery) g.reporters = g.reporters || [];
   for (const c of db.comments) c.reporters = c.reporters || [];
+  db.stats = db.stats || { views: 0, days: {} };
+  db.stats.days = db.stats.days || {};
   save();
 }
 function mk(code, totalSlots, pinned, sourceNote, now, collected = false) {
@@ -67,6 +69,12 @@ function refreshStatus(c) {
   else c.status = 'available';
 }
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = crypto.randomInt(i + 1); [a[i], a[j]] = [a[j], a[i]]; } }
+function todayKey() { return new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Shanghai' }); }
+const VISIT_SEEN = new Map(); // ip -> 上次计数时间，30 分钟内同一 IP 只计一次
+function visitStats() {
+  const days = (db.stats && db.stats.days) || {};
+  return { views: (db.stats && db.stats.views) || 0, todayViews: days[todayKey()] || 0 };
+}
 function state() {
   const pool = db.codes.filter(c => !c.collected && c.status !== 'deleted');
   const pinned = pool.filter(c => c.pinned);
@@ -84,7 +92,7 @@ function state() {
     .map(c => ({ id: c.id, name: c.name, text: c.text, createdAt: c.createdAt }));
   return {
     codes: codes.map(pub), collected, availableCount, gallery, comments,
-    stats: { sharedCount: pool.length, galleryCount: gallery.length, commentCount: comments.length },
+    stats: { sharedCount: pool.length, galleryCount: gallery.length, commentCount: comments.length, ...visitStats() },
   };
 }
 function extractCode(text) {
@@ -134,6 +142,20 @@ const server = http.createServer(async (req, res) => {
   const p = url.pathname;
   try {
     if (p === '/api/codes' && req.method === 'GET') return json(res, 200, state());
+    if (p === '/api/visit' && req.method === 'POST') {
+      const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+      const now = Date.now();
+      if (!VISIT_SEEN.get(ip) || now - VISIT_SEEN.get(ip) > 30 * 60 * 1000) {
+        VISIT_SEEN.set(ip, now);
+        db.stats.views = (db.stats.views || 0) + 1;
+        const k = todayKey();
+        db.stats.days[k] = (db.stats.days[k] || 0) + 1;
+        const keys = Object.keys(db.stats.days).sort();
+        while (keys.length > 30) delete db.stats.days[keys.shift()];
+        save();
+      }
+      return json(res, 200, visitStats());
+    }
     if (p === '/api/codes' && req.method === 'POST') {
       const body = await readBody(req, 4 * 1024 * 1024);
       const code = extractCode(body.rawText || '');
